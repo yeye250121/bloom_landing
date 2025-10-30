@@ -4,6 +4,7 @@ import Script from 'next/script';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import ConsultationForm from '@/components/ConsultationForm';
+import HowToParticipate from '@/components/HowToParticipate';
 import Features from '@/components/Features';
 import FeatureList from '@/components/FeatureList';
 import Footer from '@/components/Footer';
@@ -33,6 +34,7 @@ export default function Home() {
             alt="KT 텔레캅"
           />
         </section>
+        <HowToParticipate />
         <Hero />
         <Features />
         <FeatureList />

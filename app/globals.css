@@ -67,6 +67,62 @@ body {
   margin: 0 auto;
 }
 
+/* How to Participate Section */
+.how-to-participate {
+  padding: 40px 20px;
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.how-to-header h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--text-dark);
+  line-height: 1.3;
+  margin-bottom: 30px;
+}
+
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-number span {
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  letter-spacing: -0.3px;
+}
+
+.step-text h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+  margin: 0;
+}
+
 /* Form Container */
 .form-container {
   max-width: 400px;
