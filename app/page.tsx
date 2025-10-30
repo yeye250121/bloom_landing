@@ -27,13 +27,13 @@ export default function Home() {
 
       <main>
         <ConsultationForm />
-        <Hero />
         <section className="hero-image">
           <img
-            src="https://postfiles.pstatic.net/MjAyNTEwMzBfMTAg/MDAxNzYxODE2NTU3NTI4.6vwqr39MTBLHXqS0PXYayoeqIroB1r-NVpN32Tnb2TAg.0XMZKuj19-obTuh88ngErCLzs1me9nCKCAzOnUwN84wg.JPEG/%EC%B5%9C%EC%A2%85_-_%EC%83%81%EC%84%B8%ED%8E%98%EC%9D%B4%EC%A7%80_(18).jpg?type=w773"
+            src="https://hvwgs4k77hcs8ntu.public.blob.vercel-storage.com/%5B%EC%B5%9C%EC%A2%85%5D%20-%20%EC%83%81%EC%84%B8%ED%8E%98%EC%9D%B4%EC%A7%80%20%2818%29.jpg"
             alt="KT 텔레캅"
           />
         </section>
+        <Hero />
         <Features />
         <FeatureList />
         <Footer />
