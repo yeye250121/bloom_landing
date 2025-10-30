@@ -6,7 +6,17 @@ export default function ConsultationForm() {
   return (
     <>
       <section className="form-container">
-        <div id="successMessage" className="message success"></div>
+        <div id="successMessage" className="success-container">
+          <div className="success-checkmark">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="40" fill="#0099FF"/>
+              <path d="M24 40L34 50L56 28" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <h2 className="success-title">상담 신청 완료</h2>
+          <p className="success-subtitle">전문 상담사가 곧 연락 드릴거에요!</p>
+        </div>
+
         <div id="errorMessage" className="message error"></div>
 
         <form id="consultationForm">
@@ -329,20 +339,9 @@ export default function ConsultationForm() {
         });
 
         // Message functions
-        function showSuccess(message) {
-            successMessage.textContent = message;
-            successMessage.classList.add('show');
-            errorMessage.classList.remove('show');
-
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 5000);
-        }
-
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.classList.add('show');
-            successMessage.classList.remove('show');
         }
 
         // Form submission
@@ -385,18 +384,9 @@ export default function ConsultationForm() {
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Success
-                    showSuccess('상담 신청이 완료되었습니다! 곧 연락드리겠습니다.');
-
-                    // Reset form
-                    form.reset();
-                    goToStep(1);
-
-                    // Reset formData
-                    formData.phoneNumber = '';
-                    formData.installLocation = '';
-                    formData.installCount = 0;
-                    formData.privacyConsent = false;
+                    // Success - hide form and show success message
+                    form.style.display = 'none';
+                    successMessage.style.display = 'flex';
 
                     // Track events
                     if (typeof fbq !== 'undefined') {
