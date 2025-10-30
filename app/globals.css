@@ -57,12 +57,11 @@ body {
 .hero-image {
   text-align: center;
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .hero-image img {
-  max-width: 100%;
+  max-width: 400px;
+  width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
