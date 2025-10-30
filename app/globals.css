@@ -154,19 +154,18 @@ body {
 }
 
 .benefit-card {
-  border: 1px solid #E5E8EB;
+  border: none;
   border-radius: 12px;
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
   text-align: left;
-  background: var(--background-white);
+  background: #ffffff;
 }
 
 .benefit-card-large {
-  background: #FFF9E6;
-  border-color: #FFE999;
+  background: #ffffff;
 }
 
 .benefit-icon {

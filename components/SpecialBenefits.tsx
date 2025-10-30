@@ -6,13 +6,13 @@ export default function SpecialBenefits() {
       </div>
 
       <div className="benefits-grid">
-        <div className="benefit-card benefit-card-large">
+        <div className="benefit-card">
           <div className="benefit-icon">
             <img src="https://framerusercontent.com/images/WvCRkoKM4v8y2R8Vfvb0YxW8vQ.png?width=615&height=642" alt="지원금" />
           </div>
           <div className="benefit-content">
-            <h3>자영업자 창업지원금<br />300만원</h3>
-            <p className="benefit-note">(추첨 1명)</p>
+            <h3>자영업자 창업지원금<br />150만원</h3>
+            <p className="benefit-note">(월 1회 1명 추첨)</p>
           </div>
         </div>
 
