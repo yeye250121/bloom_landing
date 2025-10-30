@@ -6,30 +6,36 @@ export default function HowToParticipate() {
       </div>
 
       <div className="steps-container">
-        <div className="step-item">
-          <div className="step-number">
-            <span>1</span>
-          </div>
-          <div className="step-text">
-            <h3>이 페이지에서 상담 신청하기</h3>
-          </div>
-        </div>
-
-        <div className="step-item">
-          <div className="step-number">
-            <span>2</span>
-          </div>
-          <div className="step-text">
-            <h3>전문 상담사와 유선 상담 진행하기</h3>
+        <div className="step-card">
+          <div className="step-item">
+            <div className="step-number">
+              <span>1</span>
+            </div>
+            <div className="step-text">
+              <h3>이 페이지에서 상담 신청하기</h3>
+            </div>
           </div>
         </div>
 
-        <div className="step-item">
-          <div className="step-number">
-            <span>3</span>
+        <div className="step-card">
+          <div className="step-item">
+            <div className="step-number">
+              <span>2</span>
+            </div>
+            <div className="step-text">
+              <h3>전문 상담사와 유선 상담 진행하기</h3>
+            </div>
           </div>
-          <div className="step-text">
-            <h3>혜택과 지원금 받기</h3>
+        </div>
+
+        <div className="step-card">
+          <div className="step-item">
+            <div className="step-number">
+              <span>3</span>
+            </div>
+            <div className="step-text">
+              <h3>혜택과 지원금 받기</h3>
+            </div>
           </div>
         </div>
       </div>
