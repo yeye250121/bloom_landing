@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import ConsultationForm from '@/components/ConsultationForm';
 import HowToParticipate from '@/components/HowToParticipate';
+import SpecialBenefits from '@/components/SpecialBenefits';
 import Features from '@/components/Features';
 import FeatureList from '@/components/FeatureList';
 import Footer from '@/components/Footer';
@@ -35,6 +36,7 @@ export default function Home() {
           />
         </section>
         <HowToParticipate />
+        <SpecialBenefits />
         <Hero />
         <Features />
         <FeatureList />

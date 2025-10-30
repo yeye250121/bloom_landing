@@ -1,0 +1,33 @@
+export default function SpecialBenefits() {
+  return (
+    <section className="special-benefits">
+      <div className="benefits-header">
+        <h2>여기서만 받을 수 있는<br />특별 혜택!</h2>
+      </div>
+
+      <div className="benefits-grid">
+        <div className="benefit-card benefit-card-large">
+          <div className="benefit-icon">
+            <img src="https://framerusercontent.com/images/WvCRkoKM4v8y2R8Vfvb0YxW8vQ.png?width=615&height=642" alt="지원금" />
+          </div>
+          <div className="benefit-content">
+            <h3>자영업자 창업지원금<br />300만원</h3>
+            <p className="benefit-note">(추첨 1명)</p>
+          </div>
+        </div>
+
+        <div className="benefit-card">
+          <div className="benefit-icon">
+            <img src="https://framerusercontent.com/images/7t9MUNsUm1mAqqMhc48pU9jyeW8.png?scale-down-to=1024&width=1182&height=1146" alt="화재보험" />
+          </div>
+          <div className="benefit-content">
+            <h3>최대 5000만원 보장<br />매장 화재보험 가입</h3>
+            <p className="benefit-note">(100% 전원 지급)</p>
+          </div>
+        </div>
+      </div>
+
+      <p className="benefits-footer">도입 후 설치 완료 시</p>
+    </section>
+  );
+}
