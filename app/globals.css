@@ -139,9 +139,7 @@ body {
 
 /* Back Button */
 .back-button {
-  position: absolute;
-  top: 60px;
-  left: 20px;
+  position: static;
   background: #F5F5F5;
   border: none;
   cursor: pointer;
@@ -154,7 +152,7 @@ body {
   color: var(--text-dark);
   font-size: 20px;
   transition: all 0.2s;
-  z-index: 10;
+  margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
