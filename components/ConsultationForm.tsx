@@ -6,31 +6,14 @@ export default function ConsultationForm() {
   return (
     <>
       <section className="form-container">
-        <h2 className="form-title">간편 상담 신청</h2>
-        <p className="form-subtitle">3단계로 빠르게 신청하세요</p>
-
-        {/* Progress Bar */}
-        <div className="progress-bar">
-          <div className="progress-step active" data-step="1">
-            <div className="progress-step-circle">1</div>
-            <div className="progress-step-label">전화번호</div>
-          </div>
-          <div className="progress-step" data-step="2">
-            <div className="progress-step-circle">2</div>
-            <div className="progress-step-label">설치정보</div>
-          </div>
-          <div className="progress-step" data-step="3">
-            <div className="progress-step-circle">3</div>
-            <div className="progress-step-label">완료</div>
-          </div>
-        </div>
-
         <div id="successMessage" className="message success"></div>
         <div id="errorMessage" className="message error"></div>
 
         <form id="consultationForm">
           {/* Step 1: 전화번호 */}
           <div className="form-step active" data-step="1">
+            <h2 className="form-title">상담을 위해<br />전화번호를 입력해주세요.</h2>
+
             <div className="form-group">
               <label htmlFor="phoneNumber">
                 전화번호 <span className="required">*</span>
@@ -49,16 +32,16 @@ export default function ConsultationForm() {
                 올바른 전화번호를 입력해주세요
               </div>
             </div>
-
-            <div className="button-group">
-              <button type="button" className="btn btn-primary" id="step1Next">
-                다음
-              </button>
-            </div>
           </div>
 
-          {/* Step 2: 설치지역 & 설치대수 */}
+          {/* Step 2: 설치지역 */}
           <div className="form-step" data-step="2">
+            <button type="button" className="back-button" id="step2Prev" aria-label="이전 단계">
+              ‹
+            </button>
+
+            <h2 className="form-title">설치 지역을 입력해주세요.</h2>
+
             <div className="form-group">
               <label htmlFor="installLocation">
                 설치 지역 <span className="required">*</span>
@@ -74,6 +57,22 @@ export default function ConsultationForm() {
                 설치 지역을 입력해주세요
               </div>
             </div>
+
+            <div className="button-group">
+              <button type="button" className="btn btn-primary" id="step2Next">
+                다음
+              </button>
+            </div>
+          </div>
+
+          {/* Step 3: 설치대수 */}
+          <div className="form-step" data-step="3">
+            <button type="button" className="back-button" id="step3Prev" aria-label="이전 단계">
+              ‹
+            </button>
+
+            <h2 className="form-title">설치 대수를 입력해주세요.</h2>
+            <p className="form-subtitle">정확하지 않아도 괜찮아요!</p>
 
             <div className="form-group">
               <label htmlFor="installCount">
@@ -96,17 +95,20 @@ export default function ConsultationForm() {
             </div>
 
             <div className="button-group">
-              <button type="button" className="btn btn-secondary" id="step2Prev">
-                이전
-              </button>
-              <button type="button" className="btn btn-primary" id="step2Next">
+              <button type="button" className="btn btn-primary" id="step3Next">
                 다음
               </button>
             </div>
           </div>
 
-          {/* Step 3: 개인정보 동의 & 제출 */}
-          <div className="form-step" data-step="3">
+          {/* Step 4: 개인정보 동의 & 제출 */}
+          <div className="form-step" data-step="4">
+            <button type="button" className="back-button" id="step4Prev" aria-label="이전 단계">
+              ‹
+            </button>
+
+            <h2 className="form-title">개인정보 동의</h2>
+
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
@@ -162,9 +164,6 @@ export default function ConsultationForm() {
             </div>
 
             <div className="button-group">
-              <button type="button" className="btn btn-secondary" id="step3Prev">
-                이전
-              </button>
               <button type="submit" className="btn btn-primary" id="submitBtn">
                 상담 신청하기
               </button>
@@ -208,13 +207,14 @@ export default function ConsultationForm() {
         const consentError = document.getElementById('consentError');
 
         // Buttons
-        const step1Next = document.getElementById('step1Next');
         const step2Prev = document.getElementById('step2Prev');
         const step2Next = document.getElementById('step2Next');
         const step3Prev = document.getElementById('step3Prev');
+        const step3Next = document.getElementById('step3Next');
+        const step4Prev = document.getElementById('step4Prev');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Phone number auto formatting
+        // Phone number auto formatting and auto advance
         phoneNumberInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
 
@@ -226,6 +226,18 @@ export default function ConsultationForm() {
                 e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
             } else {
                 e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            }
+
+            // Auto advance to step 2 when phone is valid
+            const phone = e.target.value.trim();
+            if (validatePhone(phone) && currentStep === 1) {
+                phoneNumberInput.classList.remove('error');
+                phoneError.classList.remove('show');
+                formData.phoneNumber = phone;
+
+                setTimeout(() => {
+                    goToStep(2);
+                }, 300);
             }
         });
 
@@ -254,20 +266,10 @@ export default function ConsultationForm() {
             // Show target step
             document.querySelector(\`.form-step[data-step="\${step}"]\`).classList.add('active');
 
-            // Update progress bar
-            document.querySelectorAll('.progress-step').forEach((el, idx) => {
-                el.classList.remove('active', 'completed');
-                if (idx + 1 < step) {
-                    el.classList.add('completed');
-                } else if (idx + 1 === step) {
-                    el.classList.add('active');
-                }
-            });
-
             currentStep = step;
 
-            // Update summary on step 3
-            if (step === 3) {
+            // Update summary on step 4
+            if (step === 4) {
                 document.getElementById('summaryPhone').textContent = formData.phoneNumber;
                 document.getElementById('summaryLocation').textContent = formData.installLocation;
                 document.getElementById('summaryCount').textContent = formData.installCount;
@@ -277,23 +279,6 @@ export default function ConsultationForm() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Step 1 -> Step 2
-        step1Next.addEventListener('click', function() {
-            const phone = phoneNumberInput.value.trim();
-
-            if (!validatePhone(phone)) {
-                phoneNumberInput.classList.add('error');
-                phoneError.classList.add('show');
-                return;
-            }
-
-            phoneNumberInput.classList.remove('error');
-            phoneError.classList.remove('show');
-            formData.phoneNumber = phone;
-
-            goToStep(2);
-        });
-
         // Step 2 -> Step 1
         step2Prev.addEventListener('click', function() {
             goToStep(1);
@@ -302,32 +287,16 @@ export default function ConsultationForm() {
         // Step 2 -> Step 3
         step2Next.addEventListener('click', function() {
             const location = installLocationInput.value.trim();
-            const count = installCountInput.value;
-
-            let hasError = false;
 
             if (!validateLocation(location)) {
                 installLocationInput.classList.add('error');
                 locationError.classList.add('show');
-                hasError = true;
-            } else {
-                installLocationInput.classList.remove('error');
-                locationError.classList.remove('show');
+                return;
             }
 
-            if (!validateCount(count)) {
-                installCountInput.classList.add('error');
-                countError.classList.add('show');
-                hasError = true;
-            } else {
-                installCountInput.classList.remove('error');
-                countError.classList.remove('show');
-            }
-
-            if (hasError) return;
-
+            installLocationInput.classList.remove('error');
+            locationError.classList.remove('show');
             formData.installLocation = location;
-            formData.installCount = parseInt(count);
 
             goToStep(3);
         });
@@ -335,6 +304,28 @@ export default function ConsultationForm() {
         // Step 3 -> Step 2
         step3Prev.addEventListener('click', function() {
             goToStep(2);
+        });
+
+        // Step 3 -> Step 4
+        step3Next.addEventListener('click', function() {
+            const count = installCountInput.value;
+
+            if (!validateCount(count)) {
+                installCountInput.classList.add('error');
+                countError.classList.add('show');
+                return;
+            }
+
+            installCountInput.classList.remove('error');
+            countError.classList.remove('show');
+            formData.installCount = parseInt(count);
+
+            goToStep(4);
+        });
+
+        // Step 4 -> Step 3
+        step4Prev.addEventListener('click', function() {
+            goToStep(3);
         });
 
         // Message functions

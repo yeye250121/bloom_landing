@@ -26,9 +26,9 @@ export default function Home() {
       <Script src="/config.js" strategy="beforeInteractive" />
 
       <main>
-        <Navigation />
-        <Hero />
         <ConsultationForm />
+        <div style={{ height: '100vh' }}></div>
+        <Hero />
         <Features />
         <FeatureList />
         <Footer />
