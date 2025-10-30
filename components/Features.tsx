@@ -14,8 +14,8 @@ export default function Features() {
           src="https://www.kpscctv.co.kr/images/sub/sub2-1-img.jpg"
           alt="빠른 결제"
         />
-        <p>CCTV는 이제 필수입니다</p>
         <h2>KT텔레캅은 믿을 수 있어요</h2>
+        <p>CCTV는 이제 필수입니다</p>
       </div>
 
       <div className="feature">
