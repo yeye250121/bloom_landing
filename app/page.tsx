@@ -27,7 +27,7 @@ export default function Home() {
 
       <main>
         <ConsultationForm />
-        <div style={{ height: '100vh' }}></div>
+        <div style={{ height: '50vh' }}></div>
         <Hero />
         <Features />
         <FeatureList />
