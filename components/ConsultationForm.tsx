@@ -1,0 +1,459 @@
+'use client';
+
+import Script from 'next/script';
+
+export default function ConsultationForm() {
+  return (
+    <>
+      <section className="form-container">
+        <h2 className="form-title">간편 상담 신청</h2>
+        <p className="form-subtitle">3단계로 빠르게 신청하세요</p>
+
+        {/* Progress Bar */}
+        <div className="progress-bar">
+          <div className="progress-step active" data-step="1">
+            <div className="progress-step-circle">1</div>
+            <div className="progress-step-label">전화번호</div>
+          </div>
+          <div className="progress-step" data-step="2">
+            <div className="progress-step-circle">2</div>
+            <div className="progress-step-label">설치정보</div>
+          </div>
+          <div className="progress-step" data-step="3">
+            <div className="progress-step-circle">3</div>
+            <div className="progress-step-label">완료</div>
+          </div>
+        </div>
+
+        <div id="successMessage" className="message success"></div>
+        <div id="errorMessage" className="message error"></div>
+
+        <form id="consultationForm">
+          {/* Step 1: 전화번호 */}
+          <div className="form-step active" data-step="1">
+            <div className="form-group">
+              <label htmlFor="phoneNumber">
+                전화번호 <span className="required">*</span>
+              </label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                aria-label="휴대폰 번호"
+                inputMode="numeric"
+                pattern="[0-9-]*"
+                placeholder="010-1234-5678"
+                required
+              />
+              <div className="error-message" id="phoneError">
+                올바른 전화번호를 입력해주세요
+              </div>
+            </div>
+
+            <div className="button-group">
+              <button type="button" className="btn btn-primary" id="step1Next">
+                다음
+              </button>
+            </div>
+          </div>
+
+          {/* Step 2: 설치지역 & 설치대수 */}
+          <div className="form-step" data-step="2">
+            <div className="form-group">
+              <label htmlFor="installLocation">
+                설치 지역 <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="installLocation"
+                name="installLocation"
+                placeholder="예: 서울시 강남구"
+                required
+              />
+              <div className="error-message" id="locationError">
+                설치 지역을 입력해주세요
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="installCount">
+                설치 대수 <span className="required">*</span>
+              </label>
+              <input
+                type="number"
+                id="installCount"
+                name="installCount"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                min="1"
+                max="100"
+                placeholder="예: 1"
+                required
+              />
+              <div className="error-message" id="countError">
+                설치 대수를 입력해주세요 (1~100)
+              </div>
+            </div>
+
+            <div className="button-group">
+              <button type="button" className="btn btn-secondary" id="step2Prev">
+                이전
+              </button>
+              <button type="button" className="btn btn-primary" id="step2Next">
+                다음
+              </button>
+            </div>
+          </div>
+
+          {/* Step 3: 개인정보 동의 & 제출 */}
+          <div className="form-step" data-step="3">
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  id="privacyConsent"
+                  name="privacyConsent"
+                  required
+                />
+                <span>
+                  <a href="/policies" target="_blank" className="privacy-link">
+                    개인정보 처리방침
+                  </a>
+                  에 동의합니다. <span className="required">*</span>
+                </span>
+              </label>
+              <div className="error-message" id="consentError">
+                개인정보 처리방침에 동의해주세요
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: '#F7F9FC',
+                padding: '20px',
+                borderRadius: '9px',
+                margin: '20px 0',
+              }}
+            >
+              <h3 style={{ fontSize: '16px', marginBottom: '12px' }}>
+                입력하신 정보
+              </h3>
+              <p
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--text-gray)',
+                  marginBottom: '6px',
+                }}
+              >
+                <strong>전화번호:</strong> <span id="summaryPhone"></span>
+              </p>
+              <p
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--text-gray)',
+                  marginBottom: '6px',
+                }}
+              >
+                <strong>설치 지역:</strong> <span id="summaryLocation"></span>
+              </p>
+              <p style={{ fontSize: '14px', color: 'var(--text-gray)' }}>
+                <strong>설치 대수:</strong> <span id="summaryCount"></span>대
+              </p>
+            </div>
+
+            <div className="button-group">
+              <button type="button" className="btn btn-secondary" id="step3Prev">
+                이전
+              </button>
+              <button type="submit" className="btn btn-primary" id="submitBtn">
+                상담 신청하기
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      {/* Form JavaScript */}
+      <Script id="form-script" strategy="afterInteractive">
+        {`
+        // API Base URL - 설정에서 가져오기
+        const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || '';
+
+        // Form state
+        let currentStep = 1;
+        const formData = {
+            referrerUrl: document.referrer || window.location.href,
+            phoneNumber: '',
+            installLocation: '',
+            installCount: 0,
+            privacyConsent: false,
+            submittedAt: null
+        };
+
+        // Elements
+        const form = document.getElementById('consultationForm');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Input fields
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const installLocationInput = document.getElementById('installLocation');
+        const installCountInput = document.getElementById('installCount');
+        const privacyConsentCheckbox = document.getElementById('privacyConsent');
+
+        // Error messages
+        const phoneError = document.getElementById('phoneError');
+        const locationError = document.getElementById('locationError');
+        const countError = document.getElementById('countError');
+        const consentError = document.getElementById('consentError');
+
+        // Buttons
+        const step1Next = document.getElementById('step1Next');
+        const step2Prev = document.getElementById('step2Prev');
+        const step2Next = document.getElementById('step2Next');
+        const step3Prev = document.getElementById('step3Prev');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Phone number auto formatting
+        phoneNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+
+            if (value.length <= 3) {
+                e.target.value = value;
+            } else if (value.length <= 7) {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3);
+            } else if (value.length <= 11) {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+            } else {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            }
+        });
+
+        // Validation functions
+        function validatePhone(phone) {
+            const phonePattern = /^(01[0-9]|02|0[3-6][0-9]|070)-?[0-9]{3,4}-?[0-9]{4}$/;
+            return phonePattern.test(phone.replace(/\\s/g, ''));
+        }
+
+        function validateLocation(location) {
+            return location && location.trim().length >= 2;
+        }
+
+        function validateCount(count) {
+            const num = parseInt(count);
+            return !isNaN(num) && num >= 1 && num <= 100;
+        }
+
+        // Step navigation
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show target step
+            document.querySelector(\`.form-step[data-step="\${step}"]\`).classList.add('active');
+
+            // Update progress bar
+            document.querySelectorAll('.progress-step').forEach((el, idx) => {
+                el.classList.remove('active', 'completed');
+                if (idx + 1 < step) {
+                    el.classList.add('completed');
+                } else if (idx + 1 === step) {
+                    el.classList.add('active');
+                }
+            });
+
+            currentStep = step;
+
+            // Update summary on step 3
+            if (step === 3) {
+                document.getElementById('summaryPhone').textContent = formData.phoneNumber;
+                document.getElementById('summaryLocation').textContent = formData.installLocation;
+                document.getElementById('summaryCount').textContent = formData.installCount;
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Step 1 -> Step 2
+        step1Next.addEventListener('click', function() {
+            const phone = phoneNumberInput.value.trim();
+
+            if (!validatePhone(phone)) {
+                phoneNumberInput.classList.add('error');
+                phoneError.classList.add('show');
+                return;
+            }
+
+            phoneNumberInput.classList.remove('error');
+            phoneError.classList.remove('show');
+            formData.phoneNumber = phone;
+
+            goToStep(2);
+        });
+
+        // Step 2 -> Step 1
+        step2Prev.addEventListener('click', function() {
+            goToStep(1);
+        });
+
+        // Step 2 -> Step 3
+        step2Next.addEventListener('click', function() {
+            const location = installLocationInput.value.trim();
+            const count = installCountInput.value;
+
+            let hasError = false;
+
+            if (!validateLocation(location)) {
+                installLocationInput.classList.add('error');
+                locationError.classList.add('show');
+                hasError = true;
+            } else {
+                installLocationInput.classList.remove('error');
+                locationError.classList.remove('show');
+            }
+
+            if (!validateCount(count)) {
+                installCountInput.classList.add('error');
+                countError.classList.add('show');
+                hasError = true;
+            } else {
+                installCountInput.classList.remove('error');
+                countError.classList.remove('show');
+            }
+
+            if (hasError) return;
+
+            formData.installLocation = location;
+            formData.installCount = parseInt(count);
+
+            goToStep(3);
+        });
+
+        // Step 3 -> Step 2
+        step3Prev.addEventListener('click', function() {
+            goToStep(2);
+        });
+
+        // Message functions
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            errorMessage.classList.remove('show');
+
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+        }
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Validate consent
+            if (!privacyConsentCheckbox.checked) {
+                consentError.classList.add('show');
+                return;
+            }
+
+            consentError.classList.remove('show');
+            formData.privacyConsent = true;
+            formData.submittedAt = new Date().toISOString();
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>제출 중...';
+
+            // Prepare API request
+            const requestData = {
+                referrerUrl: formData.referrerUrl,
+                phoneNumber: formData.phoneNumber.replace(/[^0-9]/g, ''),
+                installLocation: formData.installLocation,
+                installCount: formData.installCount,
+                privacyConsent: formData.privacyConsent,
+                submittedAt: formData.submittedAt
+            };
+
+            try {
+                const response = await fetch(\`\${API_BASE_URL}/api/inquiry\`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    showSuccess('상담 신청이 완료되었습니다! 곧 연락드리겠습니다.');
+
+                    // Reset form
+                    form.reset();
+                    goToStep(1);
+
+                    // Reset formData
+                    formData.phoneNumber = '';
+                    formData.installLocation = '';
+                    formData.installCount = 0;
+                    formData.privacyConsent = false;
+
+                    // Track events
+                    if (typeof fbq !== 'undefined') {
+                        fbq('track', 'Lead', {
+                            content_name: 'Consultation Request',
+                            value: 0,
+                            currency: 'KRW'
+                        });
+                    }
+
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'generate_lead', {
+                            event_category: 'engagement',
+                            event_label: 'consultation_form'
+                        });
+                    }
+
+                    if (typeof kakaoPixel !== 'undefined') {
+                        kakaoPixel('4341098074617891089').completeRegistration();
+                    }
+
+                } else {
+                    showError(data.message || '상담 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '상담 신청하기';
+            }
+        });
+
+        // UTM parameters
+        (function() {
+            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+            const urlParams = new URLSearchParams(window.location.search);
+
+            utmParams.forEach(param => {
+                const value = urlParams.get(param);
+                if (value) {
+                    sessionStorage.setItem(param, value);
+                }
+            });
+        })();
+        `}
+      </Script>
+    </>
+  );
+}
