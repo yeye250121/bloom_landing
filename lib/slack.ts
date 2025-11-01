@@ -10,12 +10,10 @@ import type { InquiryRequest } from '@/types/inquiry';
 // Slack 메시지 포맷 생성
 function formatSlackMessage(data: InquiryRequest): object {
   const phoneNumber = data.phoneNumber;
-  // 전화번호 뒷자리 마스킹 (개인정보 보호)
-  const maskedPhone = phoneNumber.slice(0, -4) + '****';
   
   return {
     // 메시지 본문 (간단한 텍스트)
-    text: '🔔 새로운 KT CCTV 상담 신청이 접수되었습니다!',
+    text: '새로운 KT CCTV 상담 신청이 접수되었습니다!',
     
     // 블록 레이아웃 (예쁜 포맷)
     blocks: [
@@ -23,8 +21,8 @@ function formatSlackMessage(data: InquiryRequest): object {
         type: 'header',
         text: {
           type: 'plain_text',
-          text: '🚀 새로운 상담 신청',
-          emoji: true,
+          text: '새로운 상담 신청',
+          emoji: false,
         },
       },
       {
@@ -32,19 +30,19 @@ function formatSlackMessage(data: InquiryRequest): object {
         fields: [
           {
             type: 'mrkdwn',
-            text: `*📞 전화번호:*\n${maskedPhone}`,
+            text: `*전화번호:*\n${phoneNumber}`,
           },
           {
             type: 'mrkdwn',
-            text: `*📍 설치 지역:*\n${data.installLocation}`,
+            text: `*설치 지역:*\n${data.installLocation}`,
           },
           {
             type: 'mrkdwn',
-            text: `*📦 설치 대수:*\n${data.installCount}대`,
+            text: `*설치 대수:*\n${data.installCount}대`,
           },
           {
             type: 'mrkdwn',
-            text: `*🌐 유입 경로:*\n${data.referrerUrl || '직접 접속'}`,
+            text: `*유입 경로:*\n${data.referrerUrl || '직접 접속'}`,
           },
         ],
       },
@@ -53,7 +51,7 @@ function formatSlackMessage(data: InquiryRequest): object {
         elements: [
           {
             type: 'mrkdwn',
-            text: `⏰ 접수 시간: ${new Date().toLocaleString('ko-KR', { 
+            text: `접수 시간: ${new Date().toLocaleString('ko-KR', { 
               timeZone: 'Asia/Seoul',
               year: 'numeric',
               month: '2-digit',
@@ -75,8 +73,8 @@ function formatSlackMessage(data: InquiryRequest): object {
             type: 'button',
             text: {
               type: 'plain_text',
-              text: '📊 Google Sheets에서 보기',
-              emoji: true,
+              text: 'Google Sheets에서 보기',
+              emoji: false,
             },
             url: `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SPREADSHEET_ID}`,
             style: 'primary',
@@ -118,20 +116,12 @@ export async function sendSlackNotification(data: InquiryRequest): Promise<boole
       throw new Error(`Slack API 오류: ${response.status} ${response.statusText}`);
     }
 
-    console.log('✅ Slack 알림 전송 완료:', maskedPhoneNumber(data.phoneNumber));
+    console.log('✅ Slack 알림 전송 완료:', data.phoneNumber);
     return true;
   } catch (error) {
     // 알림 실패해도 전체 프로세스는 중단하지 않음
     console.error('❌ Slack 알림 전송 실패:', error);
     return false;
   }
-}
-
-/**
- * 전화번호 마스킹 (로그용)
- * 비유: 우편물에 주소를 적을 때 상세 주소는 가리는 것처럼
- */
-function maskedPhoneNumber(phone: string): string {
-  return phone.slice(0, -4) + '****';
 }
 
