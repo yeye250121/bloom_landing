@@ -17,15 +17,6 @@ export default function Features() {
         <h2>KT텔레캅은 믿을 수 있어요</h2>
         <p>CCTV는 이제 필수입니다</p>
       </div>
-
-      <div className="feature">
-        <h2>다양한 혜택을 받아보세요</h2>
-        <p>
-          설치비 면제부터 각종 결합 할인,
-          <br />
-          매장 화재보험 3년 무료 가입까지!
-        </p>
-      </div>
     </section>
   );
 }

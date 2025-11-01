@@ -188,10 +188,53 @@ export default function ConsultationForm() {
         // API Base URL - 설정에서 가져오기
         const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || '';
 
+        // 유입 URL 추적 (최초 1회만 저장)
+        // 비유: 손님이 우리 가게에 처음 들어올 때 "어디서 오셨어요?"를 물어보는 것과 같습니다
+        function getOrSetReferrerUrl() {
+            const STORAGE_KEY = 'initial_referrer';
+            
+            // 이미 저장된 최초 유입 URL이 있으면 그것을 사용
+            let storedReferrer = sessionStorage.getItem(STORAGE_KEY);
+            
+            if (!storedReferrer) {
+                // document.referrer = 직전 페이지 URL (브라우저가 자동으로 제공)
+                const referrer = document.referrer;
+                const currentUrl = window.location.href;
+                
+                // UTM 파라미터 추출 (마케팅 캠페인 추적용)
+                const urlParams = new URLSearchParams(window.location.search);
+                const utmSource = urlParams.get('utm_source');
+                const utmMedium = urlParams.get('utm_medium');
+                const utmCampaign = urlParams.get('utm_campaign');
+                
+                // 유입 정보 구성
+                let referrerInfo = '';
+                
+                if (referrer && referrer !== currentUrl) {
+                    // 다른 사이트에서 유입된 경우
+                    referrerInfo = referrer;
+                } else if (utmSource) {
+                    // UTM 파라미터가 있는 경우 (광고 클릭 등)
+                    referrerInfo = \`UTM: \${utmSource}\`;
+                    if (utmMedium) referrerInfo += \` / \${utmMedium}\`;
+                    if (utmCampaign) referrerInfo += \` / \${utmCampaign}\`;
+                } else {
+                    // 직접 접속 또는 북마크
+                    referrerInfo = '직접 접속';
+                }
+                
+                // sessionStorage에 저장 (탭을 닫을 때까지 유지)
+                sessionStorage.setItem(STORAGE_KEY, referrerInfo);
+                storedReferrer = referrerInfo;
+            }
+            
+            return storedReferrer;
+        }
+
         // Form state
         let currentStep = 1;
         const formData = {
-            referrerUrl: document.referrer || window.location.href,
+            referrerUrl: getOrSetReferrerUrl(), // 최초 유입 URL 사용
             phoneNumber: '',
             installLocation: '',
             installCount: 0,

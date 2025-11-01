@@ -18,7 +18,7 @@ export default function SpecialBenefits() {
 
         <div className="benefit-card">
           <div className="benefit-icon">
-            <img src="https://framerusercontent.com/images/7t9MUNsUm1mAqqMhc48pU9jyeW8.png?scale-down-to=1024&width=1182&height=1146" alt="화재보험" />
+            <img src="https://cdn-icons-png.flaticon.com/512/9166/9166553.png" alt="화재보험" />
           </div>
           <div className="benefit-content">
             <h3>최대 5000만원 보장<br />매장 화재보험 가입</h3>
