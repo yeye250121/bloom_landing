@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { inquiryRequestSchema } from '@/lib/validations';
 import { appendInquiryToSheet } from '@/lib/google-sheets';
+import { sendSlackNotification } from '@/lib/slack';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +24,12 @@ export async function POST(request: NextRequest) {
 
     // Append to Google Sheets
     await appendInquiryToSheet(validationResult.data);
+
+    // 🔔 Slack 알림 전송 (비동기, 실패해도 전체 프로세스는 계속 진행)
+    // 비유: 편지를 우체통에 넣는 것처럼, 알림을 보내고 결과를 기다리지 않습니다
+    sendSlackNotification(validationResult.data).catch((error) => {
+      console.error('⚠️ Slack 알림 전송 중 오류 (메인 프로세스는 정상):', error);
+    });
 
     return NextResponse.json(
       {

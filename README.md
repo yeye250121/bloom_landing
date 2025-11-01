@@ -86,6 +86,9 @@ NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 NEXT_PUBLIC_FB_PIXEL_ID=your_fb_pixel_id
 NEXT_PUBLIC_KAKAO_PIXEL_ID=your_kakao_pixel_id
+
+# Slack 알림 (선택사항)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 ```
 
 ### 3. 개발 서버 실행
@@ -127,6 +130,51 @@ npm start
 | A (유입경로) | B (전화번호) | C (설치지역) | D (설치대수) | E (제출시간) | F (동의여부) |
 |------------|------------|------------|------------|------------|------------|
 | URL        | 010-xxxx   | 서울시 강남구 | 1          | ISO 날짜    | Y/N        |
+
+## Slack 알림 설정 (선택사항)
+
+새로운 상담 신청이 접수될 때마다 Slack으로 실시간 알림을 받을 수 있습니다.
+
+### 1. Slack 웹훅 URL 생성
+
+1. [Slack API](https://api.slack.com/apps) 접속
+2. **"Create New App"** 클릭
+3. **"From scratch"** 선택
+4. App 이름 입력 (예: `KT CCTV 알림봇`)
+5. Workspace 선택
+6. 좌측 메뉴에서 **"Incoming Webhooks"** 클릭
+7. **"Activate Incoming Webhooks"** 토글 활성화
+8. **"Add New Webhook to Workspace"** 클릭
+9. 알림을 받을 채널 선택 (예: #general, #영업팀)
+10. **Webhook URL 복사** (예: `https://hooks.slack.com/services/T00000000/B00000000/XXXX...`)
+
+### 2. 환경 변수 설정
+
+`.env.local` 파일에 Webhook URL 추가:
+
+```bash
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+```
+
+### 3. 알림 메시지 예시
+
+```
+🚀 새로운 상담 신청
+─────────────────
+📞 전화번호: 010-1234-****
+📍 설치 지역: 서울시 강남구
+📦 설치 대수: 5대
+🌐 유입 경로: UTM: facebook / cpc
+⏰ 접수 시간: 2024-01-15 14:23:45
+
+[📊 Google Sheets에서 보기]
+```
+
+### 4. 참고사항
+
+- Slack 웹훅이 설정되지 않아도 정상 작동합니다 (선택사항)
+- 알림 전송 실패 시에도 문의 접수는 정상적으로 처리됩니다
+- 전화번호는 뒷자리 4자리가 마스킹됩니다 (개인정보 보호)
 
 ## API 엔드포인트
 
