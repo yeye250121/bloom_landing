@@ -1,6 +1,6 @@
-# 블룸 AI 정수기 - Next.js Landing Page
+# KT 텔레캅 CCTV - Next.js Landing Page
 
-AI 기반 스마트 정수기 렌탈 서비스 랜딩 페이지입니다.
+KT 텔레캅 CCTV 무료 상담 신청 랜딩 페이지입니다.
 
 ## 기술 스택
 
@@ -14,17 +14,20 @@ AI 기반 스마트 정수기 렌탈 서비스 랜딩 페이지입니다.
 ## 주요 기능
 
 ### 프론트엔드
-- 3단계 다중 폼 UI
-- 반응형 디자인
+- 4단계 다중 폼 UI (전화번호 → 설치지역 → 설치대수 → 개인정보 동의)
+- 반응형 디자인 (모바일 최적화)
 - 실시간 폼 검증
-- 한국 전화번호 포맷팅 및 검증
+- 한국 전화번호 자동 포맷팅 및 검증
+- 자동 단계 진행 (전화번호 입력 완료 시)
 - 부드러운 애니메이션 및 트랜지션
 
 ### 백엔드
-- Next.js API Routes
-- Google Sheets 데이터 저장
+- Next.js API Routes (Route Handler)
+- Google Sheets 실시간 데이터 저장
+- Slack 실시간 알림 (선택사항)
 - Zod를 통한 서버사이드 검증
 - 환경 변수 기반 설정
+- CORS 지원
 
 ### 분석 도구
 - Google Tag Manager
@@ -39,22 +42,30 @@ bloom-landing-nextjs/
 ├── app/
 │   ├── api/
 │   │   └── inquiry/
-│   │       └── route.ts          # API 엔드포인트
+│   │       └── route.ts          # API 엔드포인트 (상담 신청 처리)
+│   ├── policies/                 # 개인정보 처리방침 페이지
 │   ├── layout.tsx                # 루트 레이아웃 (분석 스크립트 포함)
 │   ├── page.tsx                  # 메인 랜딩 페이지
 │   └── globals.css               # 글로벌 스타일
 ├── components/
-│   ├── InquiryForm.tsx           # 메인 폼 컨테이너
-│   ├── FormStep1.tsx             # 1단계: 전화번호
-│   ├── FormStep2.tsx             # 2단계: 설치 정보
-│   ├── FormStep3.tsx             # 3단계: 개인정보 동의
-│   └── FeatureSection.tsx        # 기능 소개 섹션
+│   ├── ConsultationForm.tsx      # 4단계 상담 신청 폼 (메인 폼)
+│   ├── Hero.tsx                  # 히어로 섹션
+│   ├── Features.tsx              # 기능 소개 섹션
+│   ├── FeatureList.tsx           # 기능 리스트
+│   ├── HowToParticipate.tsx      # 참여 방법 섹션
+│   ├── SpecialBenefits.tsx       # 특별 혜택 섹션
+│   ├── Navigation.tsx            # 네비게이션
+│   └── Footer.tsx                # 푸터
 ├── lib/
 │   ├── google-sheets.ts          # Google Sheets 클라이언트
+│   ├── slack.ts                  # Slack 알림 클라이언트
 │   ├── validations.ts            # Zod 검증 스키마
 │   └── utils.ts                  # 유틸리티 함수
 ├── types/
 │   └── inquiry.ts                # TypeScript 타입 정의
+├── public/
+│   ├── config.js                 # 클라이언트 설정
+│   └── images/                   # 이미지 자산
 ├── .env.local                    # 환경 변수 (Git 제외)
 ├── .env.example                  # 환경 변수 템플릿
 └── package.json
@@ -255,10 +266,11 @@ vercel
 - 사용자가 입력하는 동안 자동으로 하이픈 추가
 - 숫자만 추출하여 저장
 
-### 3단계 폼 플로우
-1. **Step 1**: 전화번호 입력
-2. **Step 2**: 설치 지역 및 대수 입력
-3. **Step 3**: 개인정보 동의 및 제출
+### 4단계 폼 플로우
+1. **Step 1**: 전화번호 입력 (자동 포맷팅 및 자동 진행)
+2. **Step 2**: 설치 지역 입력
+3. **Step 3**: 설치 대수 입력 (1~100대)
+4. **Step 4**: 개인정보 동의 및 입력 정보 확인 → 제출
 
 ### 컨버전 추적
 폼 제출 성공 시 다음 이벤트 전송:
@@ -266,6 +278,40 @@ vercel
 - Facebook Pixel: `Lead` 이벤트
 - Kakao Pixel: `CompleteRegistration` 이벤트
 
+## 주요 기능 하이라이트
+
+### 🔥 자동 전화번호 포맷팅
+입력 중에 실시간으로 `010-1234-5678` 형식으로 자동 변환됩니다.
+
+### ⚡ 스마트 폼 진행
+유효한 전화번호를 입력하면 자동으로 다음 단계로 이동합니다.
+
+### 📊 유입 경로 추적
+방문자의 유입 경로(UTM, Referrer)를 자동으로 추적하고 저장합니다.
+
+### 🔔 실시간 알림
+Google Sheets에 저장과 동시에 Slack으로 실시간 알림을 받을 수 있습니다.
+
+### 📱 완벽한 반응형
+모바일, 태블릿, 데스크톱 모든 환경에 최적화되어 있습니다.
+
+## 기술 스택 상세
+
+| 카테고리 | 기술 | 용도 |
+|---------|------|------|
+| **프레임워크** | Next.js 14 (App Router) | React 기반 풀스택 프레임워크 |
+| **언어** | TypeScript | 타입 안정성 |
+| **스타일링** | Tailwind CSS | 유틸리티 기반 CSS |
+| **폼 관리** | React Hook Form | 폼 상태 관리 |
+| **검증** | Zod | 스키마 검증 (클라이언트 & 서버) |
+| **데이터 저장** | Google Sheets API | 실시간 데이터 저장 |
+| **알림** | Slack Webhook | 실시간 알림 |
+| **분석** | GA4, GTM, FB Pixel, Kakao Pixel | 마케팅 분석 |
+
+## 배포 URL
+
+🔗 **프로덕션**: [bloom-landing-three.vercel.app](https://bloom-landing-three.vercel.app)
+
 ## 라이선스
 
-Copyright © 2024 블룸 AI 정수기. All rights reserved.
+Copyright © 2024 KT 텔레캅. All rights reserved.

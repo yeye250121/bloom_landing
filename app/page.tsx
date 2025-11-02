@@ -7,7 +7,6 @@ import ConsultationForm from '@/components/ConsultationForm';
 import HowToParticipate from '@/components/HowToParticipate';
 import SpecialBenefits from '@/components/SpecialBenefits';
 import Features from '@/components/Features';
-import FeatureList from '@/components/FeatureList';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -39,7 +38,6 @@ export default function Home() {
         <SpecialBenefits />
         <Hero />
         <Features />
-        <FeatureList />
         <Footer />
       </main>
     </>

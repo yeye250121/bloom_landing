@@ -58,7 +58,7 @@ body {
 }
 
 /* Hero Image Section */
-/* 이미지를 화면에 꽉 차게 표시 (여백 제거) */
+/* 모바일: 화면 꽉 차게, 데스크탑: 다른 요소와 같은 너비 */
 .hero-image {
   width: 100%;
   padding: 0;
@@ -71,6 +71,15 @@ body {
   height: auto;
   display: block;
   margin: 0;
+}
+
+/* 데스크탑: 다른 요소들과 같은 사이즈로 제한 */
+@media (min-width: 768px) {
+  .hero-image {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
 }
 
 /* How to Participate Section */
